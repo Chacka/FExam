@@ -125,6 +125,7 @@
   <ItemGroup>
     <Compile Include="ApiTestsFixture.cs" />
     <Compile Include="ApiTests.cs" />
+    <Compile Include="Models\Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

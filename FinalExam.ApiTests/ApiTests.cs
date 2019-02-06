@@ -17,19 +17,20 @@ namespace FinalExam.ApiTests
         [Test]
         public void ApiGetFirstPostTitle()
         {
-            var url = ConfigurationManager.AppSettings["ApiBaseUrl"];
-            Initialize(url).
-                SendGetObject("posts/1").
-                    ResponseJson.SelectTokens("title").FirstOrDefault().
-                    Should().Equals("sunt aut facere repellat provident occaecati excepturi optio reprehenderit");
+            GetPosts().
+                First().Title.Should().Equals("sunt aut facere repellat provident occaecati excepturi optio reprehenderit");
+        }
 
+        [Test]
+        public void ApiGetAllPosts()
+        {
+            GetPosts().Count().Should().Equals(100);
+        }
 
-            //Request = new RestRequest("posts/1", Method.GET);
-            //Response = Client.Get(Request);
-            //Assert.That(Response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-            //ResponseJson = JObject.Parse(Response.Content);
-            //string title = (string)ResponseJson.SelectTokens("title").FirstOrDefault();
-            //StringAssert.AreEqualIgnoringCase(title, "sunt aut facere repellat provident occaecati excepturi optio reprehenderit");
+        [Test]
+        public void ApiCreatePost()
+        {
+            AddPost(out string guid);
         }
     }
 }

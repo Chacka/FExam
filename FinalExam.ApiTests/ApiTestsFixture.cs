@@ -4,6 +4,12 @@ using RestSharp;
 using System.Linq;
 using System.Net;
 using Serilog.Events;
+using System.Configuration;
+using Newtonsoft.Json;
+using FinalExam.ApiTests.Models;
+using System.Collections.Generic;
+using System;
+using FluentAssertions;
 
 namespace FinalExam.ApiTests
 {
@@ -15,41 +21,49 @@ namespace FinalExam.ApiTests
         public RestRequest Request { get; set; }
         public IRestResponse Response { get; set; }
         public JObject ResponseJson { get; set; }
-        public JArray ResponseJArray { get; set; }
 
-        public ApiTestsFixture()
+        [OneTimeSetUp]
+        public void Initialize()
         {
-
-        }
-
-        public _ Initialize(string baseUrl)
-        {
+            var baseUrl = ConfigurationManager.AppSettings["ApiBaseUrl"];
             Client = new RestClient
             {
                 BaseUrl = new System.Uri(baseUrl),
                 Timeout = System.Convert.ToInt32(System.TimeSpan.FromMinutes(3).TotalMilliseconds)
-                
             };
-            return this;
         }
 
-        public _ SendGetObject(string ep)
+        [OneTimeTearDown]
+        public void Clean()
         {
-            Request = new RestRequest(ep, Method.GET);
-            Response = Client.Get(Request);
-            ResponseJson = JObject.Parse(Response.Content);
-            Client.ExecuteAsync(Request, Response => {
-                //WriteLine(Response.Content);
-            });
-            return this;
         }
 
-        public _ SendGetArray(string ep)
+        public IEnumerable<Post> GetPosts()
         {
-            Request = new RestRequest(ep, Method.GET);
+            Request = new RestRequest("posts", Method.GET);
             Response = Client.Get(Request);
-            ResponseJArray = JArray.Parse(Response.Content);
-            return this;
+            Response.StatusCode.Should().Equals(HttpStatusCode.OK);
+            var posts =  JsonConvert.DeserializeObject<Post[]>(Response.Content).ToList();
+            return posts;
+        }
+
+        public void AddPost(out string guid)
+        {
+            guid = Guid.NewGuid().ToString();
+            
+            var post = new Post {
+                Body = "AT Body" + guid,
+                Title = "AT Title " + guid,
+                UserID = "0" };
+
+            var requestBody = JsonConvert.SerializeObject(post);
+
+            Request = new RestRequest("posts", Method.POST);
+            Request.AddJsonBody(requestBody);
+            Request.AddHeader("Content-type", "application/json; charset=UTF-8");
+
+            Response = Client.Post(Request);
+            Response.StatusCode.Should().Equals(HttpStatusCode.Created);
         }
     }
 }
