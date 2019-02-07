@@ -18,28 +18,11 @@ namespace FinalExam.UITests
         }
 
         [Test]
-        public void HotelAddTest()
+        public void TableTest()
         {
             LoginAsAdmin().
-                GoToHotelsPage();
-                    
+                GoToHotelsPage().
+                    HotelsTable.Rows.Count().Should().Equals(12);
         }
     }
 }
-
-/*
-private HotelsPage AddHotel(out string name)
-{
-    return Go.To<HotelsPage>().
-       Add.ClickAndGo().
-           HotelName.SetRandom(out name).
-           HotelDescription.SetRandom(out string description).
-           Location.Set("London").
-           HotelType.Set("Motel").
-           HotelStars.Set("3").
-           IsFeatured.Set("Yes").
-           From.Set(DateTime.Now).
-           To.Set(DateTime.Now + TimeSpan.FromDays(3)).
-           Submit();
-}
-*/
