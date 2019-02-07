@@ -38,7 +38,7 @@ namespace FinalExam.UITests.Pages
             Driver = driver;
             CurrentTable = table;
             Rows = new List<Row>();
-            var Rowelements = CurrentTable.FindElements(By.XPath("./tr"));
+            var Rowelements = CurrentTable.FindElements(By.XPath(".//tr[contains(@class, 'xcrud-row')]"));
             foreach (var item in Rowelements)
             {
                 Rows.Add(new Row(item, Driver));
@@ -56,7 +56,7 @@ namespace FinalExam.UITests.Pages
             Driver = driver;
             CurrentRow = row;
             Cells = new List<Cell>();
-            var CellElements = CurrentRow.FindElements(By.XPath("./td"));
+            var CellElements = CurrentRow.FindElements(By.XPath(".//td"));
             foreach (var item in CellElements)
             {
                 Cells.Add(new Cell(item));

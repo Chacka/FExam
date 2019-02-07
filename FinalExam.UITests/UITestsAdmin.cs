@@ -18,11 +18,19 @@ namespace FinalExam.UITests
         }
 
         [Test]
-        public void TableTest()
+        public void TableRowsTest()
         {
             LoginAsAdmin().
                 GoToHotelsPage().
                     HotelsTable.Rows.Count().Should().Equals(12);
+        }
+
+        [Test]
+        public void TableColumnsTest()
+        {
+            LoginAsAdmin().
+                GoToHotelsPage().
+                    HotelsTable.Rows.First().Cells.Count().Should().Equals(12);
         }
     }
 }
